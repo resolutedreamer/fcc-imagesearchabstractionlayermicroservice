@@ -1,7 +1,7 @@
 {
   "name": "resolutedreamer-imagesearchabstractionlayer",
   "version": "1.0.0",
-  "description": "Free Code Camp - Image Search Abstraction Layer Microservice",
+  "description": "Free Code Camp - Image Search Abstraction Layer Microservice, Implemented by Anthony C. Nguyen",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
