@@ -85,7 +85,7 @@ app.get("/api/imagesearch/*", function (req, res) {
       'q': search_text
     },
     headers: {
-      'Ocp-Apim-Subscription-Key':"f7ccfd07651b4e488fdddcfe910525e5"
+      'Ocp-Apim-Subscription-Key': process.env.BINGKEY
     }
   }
 
@@ -104,7 +104,6 @@ app.get("/api/imagesearch/*", function (req, res) {
         image_result["context"] = bing_result["hostPageUrl"];
         finalresult[i] = image_result;
       }
-      console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
       console.log(finalresult);
       res.json(finalresult);
     })
