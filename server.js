@@ -3,6 +3,7 @@
 
 // init project
 var express = require('express');
+const request = require('request-promise')  
 
 //lets require/import the mongodb native drivers.
 var mongodb = require('mongodb');
@@ -46,9 +47,9 @@ app.get("/api/imagesearch/*", function (req, res) {
   console.log(params);
   console.log(query_param);
   var search_text = params[0];
+  var num_results = query_param["offset"];
   console.log(search_text);
   var finalresult = [];
-  
   // Store the search record into the database
   MongoClient.connect(url, function (err, db) {
     if (err) {
@@ -60,14 +61,14 @@ app.get("/api/imagesearch/*", function (req, res) {
       var collection = db.collection('searches');
   
       //Create a search record
-      var searchrecord = {term: search_text, when:"now"};
+      var searchrecord = {term: search_text, when: Date()};
       
       // Insert some users
-      collection.insert([searchrecord], function (err, result) {
+      collection.insert(searchrecord, function (err, result) {
         if (err) {
           console.log(err);
         } else {
-          console.log('Inserted %d documents into the "searches" collection. The documents inserted with "_id" are:', result.length, result);
+          console.log('Inserted documents into the "searches" collection. The documents inserted with "_id" are:', result);
         }
         //Close connection
         db.close();
@@ -76,7 +77,42 @@ app.get("/api/imagesearch/*", function (req, res) {
   });
   
   // Simultaneously, perform the search with Bing Image Search API
-  
+  const options = {  
+    method: 'GET',
+    uri: 'https://api.cognitive.microsoft.com/bing/v5.0/images/search',
+    json: true,
+    qs: {
+      'q': search_text
+    },
+    headers: {
+      'Ocp-Apim-Subscription-Key':"f7ccfd07651b4e488fdddcfe910525e5"
+    }
+  }
+
+  request(options)
+    .then(function (response) {
+      // Request was successful, use the response object at will
+      console.log("Bing Response")
+      console.log(response["value"])
+      for (var i = 0; i < num_results; i++) {
+        var bing_result = response["value"][i];
+        
+        var image_result = {};
+        image_result["url"] = bing_result["contentUrl"];
+        image_result["snippet"] = bing_result["name"];
+        image_result["thumbnail"] = bing_result["thumbnailUrl"];
+        image_result["context"] = bing_result["hostPageUrl"];
+        finalresult[i] = image_result;
+      }
+      console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+      console.log(finalresult);
+      res.json(finalresult);
+    })
+    .catch(function (err) {
+      // Something bad happened, handle the error
+      console.log("Bad Response")
+      console.log(err)
+    })
 });
 
 app.get("/api/latest/imagesearch/", function (req, res){
@@ -105,7 +141,6 @@ app.get("/api/latest/imagesearch/", function (req, res){
           for (var i = 0; i < 10; i++) {
             finalresult[i] = {"term":searchresults[i]["term"], "when":searchresults[i]["when"]}
           }
-          res.json(finalresult);
         }
         db.close();
       });
