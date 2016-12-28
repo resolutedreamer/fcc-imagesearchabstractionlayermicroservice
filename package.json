@@ -1,0 +1,26 @@
+{
+  "name": "resolutedreamer-imagesearchabstractionlayer",
+  "version": "1.0.0",
+  "description": "Free Code Camp - Image Search Abstraction Layer Microservice",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test.js"
+  },
+  "author": "Anthony Nguyen",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/resolutedreamer/fcc-imagesearchabstractionlayermicroservice.git"
+  },
+  "keywords": [
+    "imagesearchabstractionlayermicroservice"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/resolutedreamer/fcc-imagesearchabstractionlayermicroservice/issues"
+  },
+  "homepage": "https://github.com/resolutedreamer/fcc-imagesearchabstractionlayermicroservice#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
